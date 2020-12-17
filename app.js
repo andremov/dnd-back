@@ -10,10 +10,6 @@ const bodyParser = require('body-parser');
 // MONGODB HANDLER PACKAGE
 const mongoose = require('mongoose');
 
-// DECLARATION OF ROUTES
-const productRoutes = require('./api/routes/products');
-const orderRoutes = require('./api/routes/orders');
-
 mongoose.connect(
     'mongodb+srv://andremov:'+
     process.env.MONGO_PASS+
@@ -46,9 +42,13 @@ app.use((req,res,next) => {
     next();
 });
 
+// DECLARATION  OF ROUTES
+const playerRoutes = require('./api/routes/players');
+// const orderRoutes = require('./api/routes/orders');
+
 // CALLING ROUTES
-app.use('/products', productRoutes);
-app.use('/orders', orderRoutes);
+app.use('/players', playerRoutes);
+// app.use('/orders', orderRoutes);
 
 
 // NO SUCH ROUTE ERROR HANDLER
