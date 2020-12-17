@@ -17,7 +17,7 @@ const orderRoutes = require('./api/routes/orders');
 mongoose.connect(
     'mongodb+srv://andremov:'+
     process.env.MONGO_PASS+
-    '@node-rest-api-test-byh61.mongodb.net/test?retryWrites=true&w=majority',
+    '@cluster0.z83fc.mongodb.net/game-1?retryWrites=true&w=majority',
     {
         // useMongoClient: true,
         useNewUrlParser : true,
