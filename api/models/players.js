@@ -15,9 +15,10 @@ const playerSchema = mongoose.Schema({
     level : { type : Number, required : true, default : 1 },
     hit_points : { type : Number, required : true },
     max_hit_points : { type : Number, required : true },
+    stats : { type : String, required : true },
     
-    inventory : { type : String },
     notes : { type : String },
+    background : { type : String },
     armor_class : { type : Number, default : 0 },
     attack_dice_sides : { type : Number, default : 2 },
     attack_dice_number : { type : Number, default : 1 }

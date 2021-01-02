@@ -44,10 +44,14 @@ app.use((req,res,next) => {
 
 // DECLARATION  OF ROUTES
 const playerRoutes = require('./api/routes/players');
+const itemRoutes = require('./api/routes/items');
+const spellRoutes = require('./api/routes/spells');
 // const orderRoutes = require('./api/routes/orders');
 
 // CALLING ROUTES
 app.use('/players', playerRoutes);
+app.use('/items', itemRoutes);
+app.use('/spells', spellRoutes);
 // app.use('/orders', orderRoutes);
 
 
