@@ -80,14 +80,14 @@ router.delete('/:id', async ( req, res ) => {
 });
 
 router.post('/trade', async ( req, res ) => {
-    const { target_player, trade_data } = req.body;
+    const { target_player, trade_data, origin_player } = req.body;
     
     for ( let i = 0; i < trade_data.length; i++ ) {
         let item = await Item.findById(trade_data[i]._id).then(doc => {
             return doc
         })
         
-        if (!item) {
+        if ( !item ) {
             continue;
         }
         
@@ -127,7 +127,9 @@ router.post('/trade', async ( req, res ) => {
         }
     }
     
-    res.status(200).json({ message : 'Success!' });
+    Item.find({ owner : target_player }).then(docs => {
+        res.status(200).json(docs);
+    })
 });
 
 module.exports = router;

@@ -21,7 +21,9 @@ router.post('/', async ( req, res ) => {
     });
     player.save()
         .then(() => {
-            res.status(200).json({ message : 'Success!' });
+            Note.find({ owner : req.body.owner }).then(docs => {
+                res.status(200).json(docs)
+            })
         }).catch(err => {
         res.status(500).json({
             error : err
@@ -59,8 +61,10 @@ router.get('/:id', async ( req, res ) => {
 
 router.patch('/:id', async ( req, res ) => {
     let id = req.params.id;
-    Note.update({ _id : id }, { ...req.body }).exec().then(doc => {
-        res.status(200).json(doc);
+    Note.update({ _id : id }, { ...req.body }).exec().then(() => {
+        Note.find({ owner : req.body.owner }).then(docs => {
+            res.status(200).json(docs)
+        })
     }).catch(err => {
         res.status(500).json({
             error : err
