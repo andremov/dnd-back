@@ -112,7 +112,7 @@ router.get('/all-data/:id', async ( req, res ) => {
     res.status(200).json({ player_data, player_items, player_spells, player_quests, player_notes });
 });
 
-router.get('/:id', async ( req, res ) => {
+router.get('/single/:id', async ( req, res ) => {
     let id = req.params.id;
     Player.findById(id).exec().then(doc => {
         if ( doc ) {
