@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Player = require('../models/players');
+const Item = require('../models/items');
+const Spell = require('../models/spells');
+const Quest = require('../models/quests');
+const Note = require('../models/notes');
 
 router.get('/', async ( req, res ) => {
     Player.find()
@@ -31,7 +35,7 @@ router.post('/', async ( req, res ) => {
 
 router.get('/find', async ( req, res ) => {
     let codename = req.query.codename;
-    Player.findOne({ codename }).exec().then(doc => {
+    Player.findOne({ codename }).select('_id').exec().then(doc => {
         if ( doc ) {
             res.status(200).json(doc);
         } else {
@@ -44,6 +48,68 @@ router.get('/find', async ( req, res ) => {
             error : err
         });
     })
+});
+
+router.get('/all-data/:id', async ( req, res ) => {
+    let id = req.params.id;
+    
+    let player_data = await Player.findById(id).exec()
+        .then(doc => {
+            if ( doc ) {
+                return doc
+            } else {
+                res.status(404).json({
+                    message : 'Player not found.'
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).json({
+                error : err
+            });
+        })
+    
+    let player_items = await Item.find({ owner : id }).exec()
+        .then(doc => {
+            return doc
+        })
+        .catch(err => {
+            res.status(500).json({
+                error : err
+            });
+        })
+    
+    let player_spells = await Spell.find({ owner : id }).exec()
+        .then(doc => {
+            return doc
+        })
+        .catch(err => {
+            res.status(500).json({
+                error : err
+            });
+        })
+    
+    let player_quests = await Quest.find({ owner : id }).exec()
+        .then(doc => {
+            return doc
+        })
+        .catch(err => {
+            res.status(500).json({
+                error : err
+            });
+        })
+    
+    let player_notes = await Note.find({ owner : id }).exec()
+        .then(doc => {
+            return doc
+        })
+        .catch(err => {
+            res.status(500).json({
+                error : err
+            });
+        })
+    
+    res.status(200).json({ player_data, player_items, player_spells, player_quests, player_notes });
 });
 
 router.get('/:id', async ( req, res ) => {

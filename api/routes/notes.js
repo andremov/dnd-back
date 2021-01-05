@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const Item = require('../models/items');
+const Note = require('../models/notes');
 
 router.get('/', async ( req, res ) => {
-    Item.find()
+    Note.find()
         .exec()
         .then(doc => {
             res.status(200).json(doc);
@@ -15,7 +15,7 @@ router.get('/', async ( req, res ) => {
 });
 
 router.post('/', async ( req, res ) => {
-    const player = new Item({
+    const player = new Note({
         ...req.body,
         _id : new mongoose.Types.ObjectId(),
     });
@@ -31,7 +31,7 @@ router.post('/', async ( req, res ) => {
 
 router.get('/owned-by', async ( req, res ) => {
     let id = req.query.id;
-    Item.find({ owner : id }).exec().then(doc => {
+    Note.find({ owner : id }).exec().then(doc => {
         res.status(200).json(doc);
     }).catch(err => {
         res.status(500).json({
@@ -42,7 +42,7 @@ router.get('/owned-by', async ( req, res ) => {
 
 router.get('/:id', async ( req, res ) => {
     let id = req.params.id;
-    Item.findById(id).exec().then(doc => {
+    Note.findById(id).exec().then(doc => {
         if ( doc ) {
             res.status(200).json(doc);
         } else {
@@ -59,7 +59,7 @@ router.get('/:id', async ( req, res ) => {
 
 router.patch('/:id', async ( req, res ) => {
     let id = req.params.id;
-    Item.update({ _id : id }, { ...req.body }).exec().then(doc => {
+    Note.update({ _id : id }, { ...req.body }).exec().then(doc => {
         res.status(200).json(doc);
     }).catch(err => {
         res.status(500).json({
@@ -70,7 +70,7 @@ router.patch('/:id', async ( req, res ) => {
 
 router.delete('/:id', async ( req, res ) => {
     let id = req.params.id;
-    Item.deleteOne({ _id : id }).exec().then(doc => {
+    Note.deleteOne({ _id : id }).exec().then(doc => {
         res.status(200).json(doc);
     }).catch(err => {
         res.status(500).json({

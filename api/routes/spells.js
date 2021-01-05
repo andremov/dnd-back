@@ -29,9 +29,9 @@ router.post('/', async ( req, res ) => {
     })
 });
 
-router.get('/find', async ( req, res ) => {
-    let codename = req.query.id;
-    Spell.find({ owner : codename }).exec().then(doc => {
+router.get('/owned-by', async ( req, res ) => {
+    let id = req.query.id;
+    Spell.find({ owner : id }).exec().then(doc => {
         res.status(200).json(doc);
     }).catch(err => {
         res.status(500).json({
