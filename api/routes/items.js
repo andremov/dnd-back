@@ -129,7 +129,7 @@ router.post('/trade', async ( req, res ) => {
         }
     }
     
-    Item.find({ owner : target_player }).then(docs => {
+    Item.find({ owner : origin_player }).then(docs => {
         res.status(200).json(docs);
     })
 });

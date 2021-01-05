@@ -47,12 +47,14 @@ const playerRoutes = require('./api/routes/players');
 const itemRoutes = require('./api/routes/items');
 const spellRoutes = require('./api/routes/spells');
 const noteRoutes = require('./api/routes/notes');
+const questRoutes = require('./api/routes/quests');
 
 // CALLING ROUTES
 app.use('/players', playerRoutes);
 app.use('/items', itemRoutes);
 app.use('/spells', spellRoutes);
 app.use('/notes', noteRoutes);
+app.use('/quests', questRoutes);
 
 
 // NO SUCH ROUTE ERROR HANDLER
