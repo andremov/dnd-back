@@ -84,14 +84,18 @@ router.post('/trade', async ( req, res ) => {
     console.log(target_player)
     
     for ( let i = 0; i < trade_data.length; i++ ) {
-        console.log(trade_data[i])
         let item = await Item.findById(trade_data[i]._id).then(doc => {
             return doc
         })
+        
+        if (!item) {
+            continue;
+        }
+        
         let target_item = {
             ...item,
             owner : target_player,
-            quantity : trade_data[i].trade_amount,
+            quantity : Math.min(trade_data[i].trade_amount, item.quantity),
             _id : new mongoose.Types.ObjectId(),
         }
         target_item.save()
@@ -102,7 +106,7 @@ router.post('/trade', async ( req, res ) => {
                     error : err
                 });
             })
-        if ( trade_data[i].trade_amount === item.quantity ) {
+        if ( trade_data[i].trade_amount >= item.quantity ) {
             Item.deleteOne({ _id : trade_data[i]._id })
                 .then(() => {
                 })
