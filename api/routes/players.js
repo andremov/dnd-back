@@ -51,27 +51,72 @@ router.get('/find', async ( req, res ) => {
 });
 
 router.get('/all-data/:id', async ( req, res ) => {
-    let id = req.params.id;
+    let id = mongoose.Types.ObjectId(req.params.id);
     
-    let player_data = await Player.findById(id).exec()
-        .then(doc => {
-            if ( doc ) {
-                return doc
-            } else {
-                res.status(404).json({
-                    message : 'Player not found.'
-                });
+    Player.aggregate([
+        {
+            $match : {
+                '_id' : id,
             }
-        })
-        .catch(err => {
-            res.status(500).json({
-                error : err
-            });
-        })
-    
-    let player_items = await Item.find({ owner : id }).exec()
+        },
+        {
+            $lookup : {
+                'from' : 'items',
+                'localField' : '_id',
+                'foreignField' : 'owner',
+                'as' : 'player_items'
+            }
+        },
+        {
+            $lookup : {
+                'from' : 'notes',
+                'localField' : '_id',
+                'foreignField' : 'owner',
+                'as' : 'player_notes'
+            }
+        },
+        {
+            $lookup : {
+                'from' : 'spells',
+                'localField' : '_id',
+                'foreignField' : 'owner',
+                'as' : 'player_spells'
+            }
+        },
+        {
+            $lookup : {
+                'from' : 'quests',
+                'localField' : '_id',
+                'foreignField' : 'owner',
+                'as' : 'player_quests'
+            }
+        },
+        {
+            $lookup : {
+                'from' : 'players',
+                'localField' : '_id',
+                'foreignField' : '_id',
+                'as' : 'player_data'
+            }
+        },
+        {
+            $project : {
+                _id : 0,
+                player_data : 1,
+                player_quests : 1,
+                player_spells : 1,
+                player_notes : 1,
+                player_items : 1,
+            }
+        },
+        {
+            $unwind : {
+                path : '$player_data'
+            }
+        },
+    ]).exec()
         .then(doc => {
-            return doc
+            res.status(200).json(doc);
         })
         .catch(err => {
             res.status(500).json({
@@ -79,37 +124,75 @@ router.get('/all-data/:id', async ( req, res ) => {
             });
         })
     
-    let player_spells = await Spell.find({ owner : id }).exec()
+});
+
+router.get('/omega', async ( req, res ) => {
+    
+    Player.aggregate([
+        {
+            $lookup : {
+                'from' : 'items',
+                'localField' : '_id',
+                'foreignField' : 'owner',
+                'as' : 'player_items'
+            }
+        },
+        {
+            $lookup : {
+                'from' : 'notes',
+                'localField' : '_id',
+                'foreignField' : 'owner',
+                'as' : 'player_notes'
+            }
+        },
+        {
+            $lookup : {
+                'from' : 'spells',
+                'localField' : '_id',
+                'foreignField' : 'owner',
+                'as' : 'player_spells'
+            }
+        },
+        {
+            $lookup : {
+                'from' : 'quests',
+                'localField' : '_id',
+                'foreignField' : 'owner',
+                'as' : 'player_quests'
+            }
+        },
+        {
+            $lookup : {
+                'from' : 'players',
+                'localField' : '_id',
+                'foreignField' : '_id',
+                'as' : 'player_data'
+            }
+        },
+        {
+            $project : {
+                _id : 0,
+                player_data : 1,
+                player_quests : 1,
+                player_spells : 1,
+                player_notes : 1,
+                player_items : 1,
+            }
+        },
+        {
+            $unwind : {
+                path : '$player_data'
+            }
+        },
+    ]).exec()
         .then(doc => {
-            return doc
+            res.status(200).json(doc);
         })
         .catch(err => {
             res.status(500).json({
                 error : err
             });
         })
-    
-    let player_quests = await Quest.find({ owner : id }).exec()
-        .then(doc => {
-            return doc
-        })
-        .catch(err => {
-            res.status(500).json({
-                error : err
-            });
-        })
-    
-    let player_notes = await Note.find({ owner : id }).exec()
-        .then(doc => {
-            return doc
-        })
-        .catch(err => {
-            res.status(500).json({
-                error : err
-            });
-        })
-    
-    res.status(200).json({ player_data, player_items, player_spells, player_quests, player_notes });
 });
 
 router.get('/single/:id', async ( req, res ) => {
