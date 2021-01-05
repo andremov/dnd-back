@@ -81,7 +81,6 @@ router.delete('/:id', async ( req, res ) => {
 
 router.post('/trade', async ( req, res ) => {
     const { target_player, trade_data } = req.body;
-    console.log(target_player)
     
     for ( let i = 0; i < trade_data.length; i++ ) {
         let item = await Item.findById(trade_data[i]._id).then(doc => {
@@ -106,6 +105,7 @@ router.post('/trade', async ( req, res ) => {
                     error : err
                 });
             })
+        
         if ( trade_data[i].trade_amount >= item.quantity ) {
             Item.deleteOne({ _id : trade_data[i]._id })
                 .then(() => {
