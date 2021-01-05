@@ -90,13 +90,15 @@ router.post('/trade', async ( req, res ) => {
         if ( !item ) {
             continue;
         }
-        
+    
         let target_item = new Item({
-            ...item,
+            ...item._doc,
             owner : target_player,
             quantity : Math.min(trade_data[i].trade_amount, item.quantity),
             _id : new mongoose.Types.ObjectId(),
         })
+        
+
         target_item.save()
             .then(() => {
             })
