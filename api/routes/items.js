@@ -79,4 +79,51 @@ router.delete('/:id', async ( req, res ) => {
     });
 });
 
+router.post('/trade', async ( req, res ) => {
+    const { target_player, trade_data } = req.body;
+    console.log(target_player)
+    
+    for ( let i = 0; i < trade_data.length; i++ ) {
+        console.log(trade_data[i])
+        let item = await Item.findById(trade_data[i]._id).then(doc => {
+            return doc
+        })
+        let target_item = {
+            ...item,
+            owner : target_player,
+            quantity : trade_data[i].trade_amount,
+            _id : new mongoose.Types.ObjectId(),
+        }
+        target_item.save()
+            .then(() => {
+            })
+            .catch(err => {
+                res.status(500).json({
+                    error : err
+                });
+            })
+        if ( trade_data[i].trade_amount === item.quantity ) {
+            Item.deleteOne({ _id : trade_data[i]._id })
+                .then(() => {
+                })
+                .catch(err => {
+                    res.status(500).json({
+                        error : err
+                    });
+                })
+        } else {
+            Item.updateOne({ _id : trade_data[i]._id }, { quantity : item.quantity - trade_data[i].trade_amount })
+                .then(() => {
+                })
+                .catch(err => {
+                    res.status(500).json({
+                        error : err
+                    });
+                })
+        }
+    }
+    
+    res.status(200).json({ message : 'Success!' });
+});
+
 module.exports = router;
