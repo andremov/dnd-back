@@ -91,12 +91,12 @@ router.post('/trade', async ( req, res ) => {
             continue;
         }
         
-        let target_item = {
+        let target_item = new Item({
             ...item,
             owner : target_player,
             quantity : Math.min(trade_data[i].trade_amount, item.quantity),
             _id : new mongoose.Types.ObjectId(),
-        }
+        })
         target_item.save()
             .then(() => {
             })
