@@ -151,4 +151,16 @@ router.delete('/:id', async ( req, res ) => {
     });
 });
 
+router.get('/others', async ( req, res ) => {
+    Player.find()
+        .select('_id name family')
+        .exec()
+        .then(doc => {
+            res.status(200).json(doc);
+        })
+        .catch(err => {
+            res.status(500).json({ error : err });
+        })
+});
+
 module.exports = router;
