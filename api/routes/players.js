@@ -116,7 +116,7 @@ router.get('/all-data/:id', async ( req, res ) => {
         },
     ]).exec()
         .then(doc => {
-            res.status(200).json(doc);
+            res.status(200).json(doc[0]);
         })
         .catch(err => {
             res.status(500).json({
