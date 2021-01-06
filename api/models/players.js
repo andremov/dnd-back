@@ -17,7 +17,6 @@ const playerSchema = mongoose.Schema({
     max_hit_points : { type : Number, required : true },
     stats : { type : String, required : true },
     
-    notes : { type : String },
     background : { type : String },
     armor_class : { type : Number, default : 0 },
     attack_dice_sides : { type : Number, default : 2 },
